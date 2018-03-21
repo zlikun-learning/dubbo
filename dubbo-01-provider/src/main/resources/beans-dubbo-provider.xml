@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:application.properties"/>
+
+    <dubbo:application name="dubbo-01-provider" organization="${organization}" owner="${owner}" logger="slf4j"/>
+    <!-- 可以配置多个注册中心，通过不同的ID区分 -->
+    <dubbo:registry id="registry_primary" protocol="zookeeper" address="${address}" register="true"/>
+    <dubbo:protocol name="dubbo" port="${port}" serialization="java"/>
+    <!-- http://dubbo.apache.org/books/dubbo-user-book/demos/netty4.html -->
+    <!-- dubbo 2.5.6版本新增了对netty4通信模块的支持 -->
+    <dubbo:provider server="netty4" group="${group}" version="${version}" timeout="${timeout}" retries="${retries}" />
+
+    <!-- 发布服务 -->
+    <bean id="helloService" class="com.zlikun.learning.rpc.impl.HelloServiceImpl"/>
+    <dubbo:service registry="registry_primary" interface="com.zlikun.learning.rpc.HelloService" ref="helloService"/>
+
+</beans>

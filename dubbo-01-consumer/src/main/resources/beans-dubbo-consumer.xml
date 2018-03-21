@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:application.properties"/>
+
+    <dubbo:application name="dubbo-01-consumer" organization="${organization}" owner="${owner}" />
+    <!-- 可以配置多个注册中心，通过不同的ID区分 -->
+    <dubbo:registry id="registry_primary" protocol="zookeeper" address="${address}" register="true"/>
+    <dubbo:protocol name="dubbo" port="${port}" serialization="java"/>
+    <dubbo:consumer client="netty4" group="${group}" version="${version}" timeout="${timeout}" retries="${retries}" check="false"/>
+
+    <!-- 引用(消费)服务 -->
+    <dubbo:reference id="helloService" registry="registry_primary" interface="com.zlikun.learning.rpc.HelloService"/>
+
+</beans>
