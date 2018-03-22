@@ -8,16 +8,56 @@
 
     <context:property-placeholder location="classpath:application.properties"/>
 
-    <dubbo:application name="dubbo-01-provider" organization="${organization}" owner="${owner}" logger="slf4j"/>
+    <!-- http://dubbo.io/books/dubbo-user-book/references/xml/dubbo-application.html -->
+    <dubbo:application name="dubbo-01-provider"
+                       organization="${organization}"
+                       owner="${owner}"
+                       logger="slf4j"/>
     <!-- 可以配置多个注册中心，通过不同的ID区分 -->
-    <dubbo:registry id="registry_primary" protocol="zookeeper" address="${address}" register="true"/>
-    <dubbo:protocol name="dubbo" port="${port}" serialization="java"/>
+    <!-- http://dubbo.io/books/dubbo-user-book/references/xml/dubbo-registry.html -->
+    <dubbo:registry id="primary"
+                    protocol="zookeeper"
+                    address="${address}"
+                    register="true"
+                    timeout="5000"
+                    session="60000"
+                    check="true"/>
+    <!-- http://dubbo.io/books/dubbo-user-book/references/xml/dubbo-monitor.html -->
+    <dubbo:monitor protocol="registry" group="dev"/>
+    <!-- http://dubbo.io/books/dubbo-user-book/references/xml/dubbo-protocol.html -->
+    <dubbo:protocol name="dubbo"
+                    port="${port}"
+                    serialization="hessian2"/>
+    <!-- http://dubbo.io/books/dubbo-user-book/references/xml/dubbo-provider.html -->
     <!-- http://dubbo.apache.org/books/dubbo-user-book/demos/netty4.html -->
     <!-- dubbo 2.5.6版本新增了对netty4通信模块的支持 -->
-    <dubbo:provider server="netty4" group="${group}" version="${version}" timeout="${timeout}" retries="${retries}" />
+    <dubbo:provider server="netty4"
+                    group="${group}"
+                    version="${version}"
+                    timeout="${timeout}"
+                    retries="${retries}"
+                    queues="0"
+                    connections="1"
+                    threads="10"
+                    accepts="10"
+                    payload="1048576"
+                    executes="3"
+                    actives="3"
+                    cluster="failfast"
+                    token="true"
+                    layer="rpc"
+                    accesslog="true"
+                    document="https://zlikun.com/dubbo/provider"/>
 
-    <!-- 发布服务 -->
+    <!-- 声明服务 -->
     <bean id="helloService" class="com.zlikun.learning.rpc.impl.HelloServiceImpl"/>
-    <dubbo:service registry="registry_primary" interface="com.zlikun.learning.rpc.HelloService" ref="helloService"/>
+    <!-- 发布服务 -->
+    <dubbo:service registry="primary" interface="com.zlikun.learning.rpc.HelloService" ref="helloService">
+        <!--
+        <dubbo:method name="say">
+            <dubbo:parameter key="name" value="Ashe"/>
+        </dubbo:method>
+        -->
+    </dubbo:service>
 
 </beans>
