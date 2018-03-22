@@ -21,7 +21,8 @@
                     register="true"
                     timeout="5000"
                     session="60000"
-                    check="true"/>
+                    check="true"
+                    client="curator" />
     <!-- http://dubbo.io/books/dubbo-user-book/references/xml/dubbo-monitor.html -->
     <dubbo:monitor protocol="registry" group="dev"/>
     <!-- http://dubbo.io/books/dubbo-user-book/references/xml/dubbo-protocol.html -->

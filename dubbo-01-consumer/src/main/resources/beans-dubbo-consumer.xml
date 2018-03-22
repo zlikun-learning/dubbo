@@ -15,7 +15,8 @@
     <dubbo:registry id="primary"
                     protocol="zookeeper"
                     address="${address}"
-                    register="true"/>
+                    register="true"
+                    client="curator"/>
     <dubbo:protocol name="dubbo"
                     port="${port}"
                     serialization="hessian2"/>
